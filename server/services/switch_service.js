@@ -1,28 +1,33 @@
 import rpio from "rpio";
 
 class SwitchService {
-    constructor(boilerPin) {
-        this.boilerPin = boilerPin;
+    constructor(pin, onState) {
+        this.pin = pin;
         this.open = false;
-        rpio.open(this.boilerPin, rpio.OUTPUT, rpio.LOW);
-    }
-
-    async OpenBoiler() {
-        if (this.open) {
-            throw new Error("Boiler already open.");
+        if (onState == 0) {
+            this.onState = rpio.LOW;
+            this.offState = rpio.HIGH;
+        } else {
+            this.onState = rpio.HIGH;
+            this.offState = rpio.LOW;
         }
-        rpio.write(this.boilerPin, rpio.HIGH);
-        this.open = true;
-        //TODO: save to DB
+        rpio.open(this.pin, rpio.OUTPUT, this.offState);
     }
 
-    async CloseBoiler() {
+    async switchOn() {
         if (!this.open) {
-            throw new Error("Boiler already closed.");
+            rpio.write(this.boilerPin, this.onState);
+            this.open = true;
+            //TODO: save to DB
         }
-        rpio.write(this.boilerPin, rpio.LOW);
-        this.open = false;
-        //TODO: save to DB
+    }
+
+    async switchOff() {
+        if (this.open) {
+            rpio.write(this.boilerPin, this.offState);
+            this.open = false;
+            //TODO: save to DB
+        }
     }
 }
 

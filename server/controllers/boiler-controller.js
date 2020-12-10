@@ -1,5 +1,13 @@
+import SwitchService from "../services/switch_service.js";
+
+const switchService = new SwitchService(15);
 let clients = [];
-let nests = [];
+let boiler = {
+    open: false,
+    lastOpened: new Date().now,
+    openDuration: 0,
+};
+let boilerTimeout;
 
 function eventsHandler(req, res, next) {
     const headers = {
@@ -8,7 +16,7 @@ function eventsHandler(req, res, next) {
         "Cache-Control": "no-cache",
     };
     res.writeHead(200, headers);
-    const data = `data: ${JSON.stringify(nests)}\n\n`;
+    const data = `data: ${JSON.stringify(boiler)}\n\n`;
     res.write(data);
     const clientId = Date.now();
     const newClient = {
@@ -23,22 +31,37 @@ function eventsHandler(req, res, next) {
 }
 
 // Iterate clients list and use write res object method to send new nest
-function sendEventsToAll(newNest) {
-    clients.forEach((c) => c.res.write(`data: ${JSON.stringify(newNest)}\n\n`));
+function sendEventsToAll(data) {
+    clients.forEach((c) => c.res.write(`data: ${JSON.stringify(data)}\n\n`));
 }
-// Middleware for POST /nest endpoint
-async function addNest(req, res, next) {
-    console.log(nests);
-    const newNest = req.body;
-    nests.push(newNest);
-    // Send recently added nest as POST result
-    res.json(newNest);
-    // Invoke iterate and send function
-    return sendEventsToAll(newNest);
+
+// Updates boiler data and resets timer
+async function openBoiler(req, res, next) {
+    const data = req.body;
+    boiler = data;
+    clearTimeout(boilerTimeout);
+    switchService.switchOn();
+    boilerTimeout = setTimeout(() => {
+        switchService.switchOff();
+    }, boilerData.openDuration);
+    res.json(boilerData);
+    sendEventsToAll(boilerData);
+}
+
+async function closeBoiler(req, res, next) {
+    clearTimeout(boilerTimeout);
+    switchService.switchOff();
+    boiler = {
+        open: false,
+        lastOpened: new Date().now,
+        openedFor: 0,
+    };
+    sendEventsToAll(boiler);
+    res.json(boiler);
 }
 
 function status(req, res, next) {
     return res.json({ clients: clients.length });
 }
 
-export { addNest, eventsHandler, status };
+export { eventsHandler, status, openBoiler, closeBoiler };
