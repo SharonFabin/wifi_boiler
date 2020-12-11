@@ -11,12 +11,12 @@ class SwitchService {
             this.onState = rpio.HIGH;
             this.offState = rpio.LOW;
         }
-        rpio.open(this.pin, rpio.OUTPUT, this.offState);
+        //rpio.open(this.pin, rpio.OUTPUT, this.offState);
     }
 
     async switchOn() {
         if (!this.open) {
-            rpio.write(this.boilerPin, this.onState);
+            //rpio.write(this.boilerPin, this.onState);
             this.open = true;
             //TODO: save to DB
         }
@@ -24,7 +24,7 @@ class SwitchService {
 
     async switchOff() {
         if (this.open) {
-            rpio.write(this.boilerPin, this.offState);
+            //rpio.write(this.boilerPin, this.offState);
             this.open = false;
             //TODO: save to DB
         }

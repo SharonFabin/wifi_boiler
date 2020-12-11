@@ -1,6 +1,6 @@
 //192.168.68.50
 var config = {};
-
+config.boiler = {};
 config.twitter = {};
 config.redis = {};
 config.web = {};
@@ -11,6 +11,7 @@ config.web = {};
 // config.redis.uri = process.env.DUOSTACK_DB_REDIS;
 // config.redis.host = 'hostname';
 // config.redis.port = 6379;
-config.web.port = process.env.WEB_PORT || 3000;
+config.web.port = process.env.WEB_PORT || 9000;
+config.boiler.pin = 15;
 
 export default config;

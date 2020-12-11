@@ -1,6 +1,6 @@
 import SwitchService from "../services/switch_service.js";
-
-const switchService = new SwitchService(15);
+import config from "../config/index.js";
+const switchService = new SwitchService(config.boiler.pin, 1);
 let clients = [];
 let boiler = {
     open: false,
@@ -37,8 +37,7 @@ function sendEventsToAll(data) {
 
 // Updates boiler data and resets timer
 async function openBoiler(req, res, next) {
-    const data = req.body;
-    boiler = data;
+    const boilerData = req.body;
     clearTimeout(boilerTimeout);
     switchService.switchOn();
     boilerTimeout = setTimeout(() => {
@@ -51,11 +50,8 @@ async function openBoiler(req, res, next) {
 async function closeBoiler(req, res, next) {
     clearTimeout(boilerTimeout);
     switchService.switchOff();
-    boiler = {
-        open: false,
-        lastOpened: new Date().now,
-        openedFor: 0,
-    };
+    boiler.open = false;
+    boiler.openDuration = 0;
     sendEventsToAll(boiler);
     res.json(boiler);
 }
