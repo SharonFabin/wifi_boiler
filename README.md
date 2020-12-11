@@ -24,8 +24,8 @@
 
 Remote boiler controller, compatiable with both web and mobile devices.
 
-This project uses SSE as asynchronous event driven live communication. Every connected use can choose how and when to turn on the
-boiler from a remote position. All connected users or any new user can widness any changes to the boiler's state live. In addition, the program calculates at which times a user usually turns on the boiler and for how long to auto recommand for them the best experience with the boiler.
+This project uses SSE as an asynchronous event driven live communication. Every connected user can choose how and when to turn on the
+boiler from a remote position. All connected users or any new user can witness any changes to the boiler's state live. In addition, the program calculates at which times a user usually turns on the boiler and for how long to auto recommend for them the best experience with the boiler.
 
 <!-- LICENSE -->
 ## License
