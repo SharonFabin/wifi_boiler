@@ -1,22 +1,34 @@
-import rpio from "rpio";
+import child from "child_process";
 
 class SwitchService {
     constructor(pin, onState) {
         this.pin = pin;
+        this.onState = onState;
+        this.offState = onState == 1 ? 0 : 1;
         this.open = false;
-        if (onState == 0) {
-            this.onState = rpio.LOW;
-            this.offState = rpio.HIGH;
-        } else {
-            this.onState = rpio.HIGH;
-            this.offState = rpio.LOW;
-        }
-        rpio.open(this.pin, rpio.OUTPUT, this.offState);
+        child.exec("dir", (error, stdout, stderr) => {
+            if (error) {
+                console.log(`error: ${error.message}`);
+                return;
+            }
+            if (stderr) {
+                console.log(`stderr: ${stderr}`);
+                return;
+            }
+            console.log(`stdout: ${stdout}`);
+        });
     }
 
     async switchOn() {
         if (!this.open) {
-            rpio.write(this.boilerPin, this.onState);
+            try {
+                child.exec(
+                    `gpio write ${this.pin} ${this.onState}`,
+                    (error, stdout, stderr) => {}
+                );
+            } catch (err) {
+                console.log(err);
+            }
             this.open = true;
             //TODO: save to DB
         }
@@ -24,7 +36,14 @@ class SwitchService {
 
     async switchOff() {
         if (this.open) {
-            rpio.write(this.boilerPin, this.offState);
+            try {
+                child.exec(
+                    `gpio write ${this.pin} ${this.offState}`,
+                    (error, stdout, stderr) => {}
+                );
+            } catch (err) {
+                console.log(err);
+            }
             this.open = false;
             //TODO: save to DB
         }
