@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import TimerContent from "./TimerContent.js";
+import { calcRemainingSeconds } from "../services/TimeConverter.js";
 
 const timerProps = {
     isPlaying: true,
 };
 
 const DateTimer = (props) => {
+    const [startTime, setStartTime] = useState(props.startTime);
     const [timerDuration, setTimerDuration] = useState(props.timerDuration);
     useEffect(() => {
+        setStartTime(props.startTime);
         setTimerDuration(props.timerDuration);
     }, [props.timerDuration]);
     return (
@@ -20,8 +23,12 @@ const DateTimer = (props) => {
                 ["#A30000", 0.33],
             ]}
             duration={timerDuration}
+            initialRemainingTime={calcRemainingSeconds(
+                startTime,
+                timerDuration
+            )}
             onComplete={(totalElapsedTime) => []}
-            key={props.timerDuration}
+            key={timerDuration}
         >
             {({ remainingTime }) => TimerContent("seconds", remainingTime)}
         </CountdownCircleTimer>

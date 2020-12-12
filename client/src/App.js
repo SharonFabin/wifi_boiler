@@ -19,7 +19,11 @@ import { updateBoiler } from "./services/Api.js";
 import { timeToSeconds } from "./services/TimeConverter.js";
 
 function App() {
-    const [boiler, setBoiler] = useState({ open: false, openDuration: 0 });
+    const [boiler, setBoiler] = useState({
+        open: false,
+        openDuration: 0,
+        lastOpened: 0,
+    });
     const [listening, setListening] = useState(false);
     const [variantState, setVariant] = useState("primary");
     const [chosenTime, setChosenTime] = useState("00:00:00");
@@ -46,7 +50,7 @@ function App() {
             <Row className="center">
                 <Image src={cold} rounded className="status-image" />
             </Row>
-            <Row className="center progress">
+            <Row className="progress spaced">
                 <ProgressBar
                     now={30}
                     label={`${30}%`}
@@ -56,7 +60,10 @@ function App() {
             </Row>
             <Row className="center">
                 <div className="content">
-                    <DateTimer timerDuration={boiler.openDuration} />
+                    <DateTimer
+                        startTime={boiler.lastOpened}
+                        timerDuration={boiler.openDuration}
+                    />
                 </div>
             </Row>
             <Row className="center spaced">
@@ -91,7 +98,7 @@ function App() {
                     Start
                 </Button>
                 <Button className="button-space" variant="primary">
-                    {boiler.open} - {boiler.openDuration}
+                    {boiler.open} : {boiler.openDuration} : {boiler.lastOpened}
                 </Button>
             </Row>
         </Container>
