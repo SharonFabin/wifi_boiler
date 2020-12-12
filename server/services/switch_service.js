@@ -6,17 +6,6 @@ class SwitchService {
         this.onState = onState;
         this.offState = onState == 1 ? 0 : 1;
         this.open = false;
-        child.exec("dir", (error, stdout, stderr) => {
-            if (error) {
-                console.log(`error: ${error.message}`);
-                return;
-            }
-            if (stderr) {
-                console.log(`stderr: ${stderr}`);
-                return;
-            }
-            console.log(`stdout: ${stdout}`);
-        });
     }
 
     async switchOn() {
