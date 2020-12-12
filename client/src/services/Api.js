@@ -1,3 +1,5 @@
+import config from "../config/index.js";
+
 const updateBoiler = (time) => {
     const requestOptions = {
         method: "POST",
@@ -5,9 +7,21 @@ const updateBoiler = (time) => {
         body: JSON.stringify({ open: true, openDuration: time }),
     };
     fetch(
-        "http://localhost:9000/boiler/open",
+        `http://${config.web.ip}:${config.web.server_port}/boiler/open`,
         requestOptions
     ).then((response) => response.json());
 };
 
-export { updateBoiler };
+const closeBoiler = () => {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: "",
+    };
+    fetch(
+        `http://${config.web.ip}:${config.web.server_port}/boiler/close`,
+        requestOptions
+    ).then((response) => response.json());
+};
+
+export { updateBoiler, closeBoiler };

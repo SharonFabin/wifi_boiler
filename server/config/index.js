@@ -12,6 +12,6 @@ config.web = {};
 // config.redis.host = 'hostname';
 // config.redis.port = 6379;
 config.web.port = process.env.WEB_PORT || 9000;
-config.boiler.pin = 15;
+config.boiler.pin = 4;
 
 export default config;

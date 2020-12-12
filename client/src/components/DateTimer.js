@@ -28,7 +28,7 @@ const DateTimer = (props) => {
                 timerDuration
             )}
             onComplete={(totalElapsedTime) => []}
-            key={timerDuration}
+            key={startTime + timerDuration}
         >
             {({ remainingTime }) => TimerContent("seconds", remainingTime)}
         </CountdownCircleTimer>

@@ -1,109 +1,105 @@
 .App {
-  text-align: center;
+    text-align: center;
 }
 
 .App-logo {
-  height: 40vmin;
-  pointer-events: none;
+    height: 40vmin;
+    pointer-events: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
 }
 
 header {
-  background-color: #282c34;
+    background-color: #282c34;
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
 }
 
 .App-link {
-  color: #61dafb;
+    color: #61dafb;
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-.content{
-  display: flex;
-  justify-content: space-around;
-  text-align: center;
-  margin: 1rem 0;
+.content {
+    display: flex;
+    justify-content: space-around;
+    text-align: center;
+    margin: 1rem 0;
+}
+
+.button {
+    cursor: hand;
 }
 
 .btn-circle.btn-xl {
-  width: 70px;
-  height: 70px;
-  padding: 10px 16px;
-  border-radius: 35px;
-  font-size: 24px;
-  line-height: 1.33;
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    border-radius: 35px;
+    font-size: 24px;
+    line-height: 1.33;
 }
 
 .btn-circle {
-  width: 5rem;
-  height: 5rem;
-  padding: 0.2rem 0px;
-  border-radius: 5rem;
-  text-align: center;
-  font-size: 2rem;
-  line-height: 1.42857;
-  margin: 0 1rem;
+    width: 5rem;
+    height: 5rem;
+    padding: 0.2rem 0px;
+    border-radius: 5rem;
+    text-align: center;
+    font-size: 2rem;
+    line-height: 1.42857;
+    margin: 0 1rem;
+    cursor: pointer;
 }
 
-.center{
-  justify-content: center;
+.center {
+    justify-content: center;
 }
 
-.progress{
-  width: 25rem;
-  height: 2rem;
+.progress {
+    width: 25rem;
+    height: 2rem;
 }
 
-.status-image{
-  width: 12rem;
-  height: 9rem;
-  margin-bottom: 1rem;
+.status-image {
+    width: 12rem;
+    height: 9rem;
+    margin-bottom: 1rem;
 }
 
-.bg{
-  background-color: #282c34;
+.bg {
+    background-color: #282c34;
 }
 
-body{
-  background-color: #282c34;
+body {
+    background-color: #282c34;
 }
 
-.spaced{
-  margin-bottom: 1rem;
+.spaced {
+    margin-bottom: 1rem;
 }
 
-.button-space{
-  margin: 1rem;
-}
-
-.time-wrapper{
-  font-size: 2rem;
-  color: white;
-}
-
-.time{
-  height: 2rem;
+.button-space {
+    margin: 1rem;
 }

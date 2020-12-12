@@ -3,7 +3,7 @@ const hourSeconds = 3600;
 const getTimeSeconds = (time) => (minuteSeconds - time / 1000) | 0;
 const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
 const timeToSeconds = (time) => {
-    if (time != null && time.length == 8) {
+    if (time != null && time.length === 8) {
         try {
             let hours = parseInt(time.substring(0, 2), 10);
             let minutes = parseInt(time.substring(3, 5), 10);
