@@ -17,6 +17,7 @@ import DateTimer from "./components/DateTimer.js";
 import { updateBoiler, closeBoiler } from "./services/Api.js";
 import { timeToSeconds } from "./services/TimeConverter.js";
 import config from "./config/index.js";
+import TimeRangePicker from "./components/TimeRangePicker";
 
 function App() {
     const [boiler, setBoiler] = useState({
@@ -25,6 +26,7 @@ function App() {
         lastOpened: 0,
     });
     const [listening, setListening] = useState(false);
+    const [selectedDate, handleDateChange] = useState(new Date());
     const [variantState, setVariant] = useState("primary");
     const [chosenTime, setChosenTime] = useState("00:00:00");
     const onChange = (date, dateString) => {
@@ -91,14 +93,15 @@ function App() {
                 </Button>
                 <Button
                     type="button"
-                    className="btn btn-primary btn-circle btn-lg"
+                    className="btn btn-info btn-circle btn-lg"
                     onClick={() => updateBoiler(300)}
                 >
                     5
                 </Button>
             </Row>
             <Row className="center spaced">
-                <DatePicker picker="time" onChange={onChange} />
+                {/* <DatePicker picker="time" onChange={onChange} /> */}
+                <TimeRangePicker />
             </Row>
             <Row className="center spaced">
                 <Button

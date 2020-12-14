@@ -43,7 +43,7 @@ async function openBoiler(req, res, next) {
     switchService.switchOn();
     boilerTimeout = setTimeout(() => {
         switchService.switchOff();
-    }, boiler.openDuration);
+    }, boiler.openDuration * 1000);
     res.json(boiler);
     sendEventsToAll(boiler);
 }

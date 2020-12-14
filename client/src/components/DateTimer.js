@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import TimerContent from "./TimerContent.js";
-import { calcRemainingSeconds } from "../services/TimeConverter.js";
+import {
+    secondsToDate,
+    calcRemainingSeconds,
+} from "../services/TimeConverter.js";
 
 const timerProps = {
     isPlaying: true,
@@ -30,7 +33,7 @@ const DateTimer = (props) => {
             onComplete={(totalElapsedTime) => []}
             key={startTime + timerDuration}
         >
-            {({ remainingTime }) => TimerContent("seconds", remainingTime)}
+            {({ remainingTime }) => TimerContent(secondsToDate(remainingTime))}
         </CountdownCircleTimer>
     );
 };

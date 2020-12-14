@@ -1,10 +1,9 @@
 import "./TimerContent.css";
 
-const TimerContent = (dimension, time) => {
+const TimerContent = (time) => {
     return (
         <div className="time-wrapper">
             <div className="time">{time}</div>
-            <div>{dimension}</div>
         </div>
     );
 };

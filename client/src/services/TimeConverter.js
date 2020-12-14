@@ -15,9 +15,19 @@ const timeToSeconds = (time) => {
     }
     return 0;
 };
+const secondsToDate = (seconds) => {
+    return new Date(seconds * 1000).toISOString().substr(11, 8);
+};
 const calcRemainingSeconds = (start, duration) => {
-    const remainingTime = duration - (Date.now() - start) / 1000;
+    const timePast = Date.now() - start;
+    const remainingTime = duration - (timePast > 0 ? timePast : 0) / 1000;
     return remainingTime > 0 ? remainingTime : 0;
 };
 
-export { getTimeSeconds, getTimeMinutes, timeToSeconds, calcRemainingSeconds };
+export {
+    getTimeSeconds,
+    getTimeMinutes,
+    timeToSeconds,
+    secondsToDate,
+    calcRemainingSeconds,
+};

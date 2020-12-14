@@ -50,6 +50,7 @@ header {
 
 .button {
     cursor: hand;
+    color: white;
 }
 
 .btn-circle.btn-xl {
@@ -62,6 +63,8 @@ header {
 }
 
 .btn-circle {
+    color: white;
+    text-shadow: 0 0 3px #000000;
     width: 5rem;
     height: 5rem;
     padding: 0.2rem 0px;

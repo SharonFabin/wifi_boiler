@@ -6,6 +6,19 @@ class SwitchService {
         this.onState = onState;
         this.offState = onState == 1 ? 0 : 1;
         this.open = false;
+        this.initGpio();
+    }
+
+    async initGpio() {
+        try {
+            child.exec(
+                `gpio mode ${this.pin} out`,
+                (error, stdout, stderr) => {}
+            );
+        } catch (err) {
+            console.log(err);
+        }
+        this.switchOff();
     }
 
     async switchOn() {
