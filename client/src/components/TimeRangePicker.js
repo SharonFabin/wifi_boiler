@@ -22,35 +22,44 @@ const materialTheme = createMuiTheme({
     },
 });
 
+const defaultTimeProps = {
+    ampm: false,
+    views: ["hours", "minutes"],
+    showTodayButton: true,
+    okLabel: "אשר",
+    cancelLabel: "בטל",
+    todayLabel: "עכשיו",
+};
+
 const TimeRangePicker = (props) => {
     const [fromDate, setFromDate] = useState(new Date());
     const [toDate, setToDate] = useState(new Date());
+    const onChangeFrom = (val) => {
+        if (val > toDate) val = toDate;
+        setFromDate(val);
+        props.onChangeFrom(val);
+    };
+    const onChangeTo = (val) => {
+        if (val < fromDate) val = fromDate;
+        setToDate(val);
+        props.onChangeTo(val);
+    };
     return (
         <ThemeProvider theme={materialTheme}>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <div className="time-picker">
                     <TimePicker
+                        {...defaultTimeProps}
                         value={fromDate}
-                        onChange={setFromDate}
-                        ampm={false}
-                        views={["hours", "minutes"]}
-                        showTodayButton={true}
-                        okLabel="אשר"
-                        cancelLabel="בטל"
-                        todayLabel="עכשיו"
+                        onChange={onChangeFrom}
                     />
                 </div>
                 <div className="dash">{"→"}</div>
                 <div className="time-picker">
                     <TimePicker
+                        {...defaultTimeProps}
                         value={toDate}
-                        onChange={setToDate}
-                        ampm={false}
-                        views={["hours", "minutes"]}
-                        showTodayButton={true}
-                        okLabel="אשר"
-                        cancelLabel="בטל"
-                        todayLabel="עכשיו"
+                        onChange={onChangeTo}
                     />
                 </div>
             </MuiPickersUtilsProvider>

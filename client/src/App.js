@@ -26,9 +26,11 @@ function App() {
         lastOpened: 0,
     });
     const [listening, setListening] = useState(false);
-    const [selectedDate, handleDateChange] = useState(new Date());
     const [variantState, setVariant] = useState("primary");
+    const [statusImage, setStatusImage] = useState(cold);
     const [chosenTime, setChosenTime] = useState("00:00:00");
+    const [startTime, setStartTime] = useState(new Date());
+    const [stopTime, setStopTime] = useState(new Date());
     const onChange = (date, dateString) => {
         setChosenTime(dateString);
     };
@@ -49,6 +51,8 @@ function App() {
                         })
                 );
                 setBoiler((boiler) => (boiler = parsedData));
+                setVariant(parsedData.open ? "danger" : "primary");
+                setStatusImage(parsedData.open ? hot : cold);
             };
 
             setListening(true);
@@ -58,12 +62,12 @@ function App() {
     return (
         <Container className="p-3 bg">
             <Row className="center">
-                <Image src={cold} rounded className="status-image" />
+                <Image src={statusImage} rounded className="status-image" />
             </Row>
             <Row className="center spaced">
                 <ProgressBar
-                    now={30}
-                    label={`${30}%`}
+                    now={100}
+                    label={`${100}%`}
                     animated
                     variant={variantState}
                 />
@@ -101,7 +105,10 @@ function App() {
             </Row>
             <Row className="center spaced">
                 {/* <DatePicker picker="time" onChange={onChange} /> */}
-                <TimeRangePicker />
+                <TimeRangePicker
+                    onChangeFrom={setStartTime}
+                    onChangeTo={setStopTime}
+                />
             </Row>
             <Row className="center spaced">
                 <Button
