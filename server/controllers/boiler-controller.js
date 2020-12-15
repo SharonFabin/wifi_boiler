@@ -7,7 +7,7 @@ let boiler = {
     openDuration: 0,
     lastOpened: Date.now(),
     openFrom: 0,
-    openUntil: 0,
+    openTo: 0,
 };
 let boilerTimeout;
 let scheduleTimeout;
@@ -36,18 +36,14 @@ function eventsHandler(req, res, next) {
 // Iterate clients list and use write res object method to send new nest
 
 async function scheduleBoiler(req, res, next) {
-    console.log("hi");
     const boilerData = req.body;
+    boiler.openTo = boilerData.openTo;
+    boiler.openFrom = boilerData.openFrom;
     clearTimeout(scheduleTimeout);
     scheduleTimeout = setTimeout(() => {
         startBoiler(boilerData.openTo - boilerData.openFrom);
     }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000);
-    console.log(
-        `schedule for ${
-            (boilerData.openFrom - new Date().getTime() / 1000) * 1000
-        } seconds from now
-        ${boilerData.openFrom} ${new Date().getTime() / 1000}`
-    );
+    sendEventsToAll(boiler);
 }
 
 // Updates boiler data and resets timer

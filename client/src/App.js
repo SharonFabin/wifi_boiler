@@ -28,7 +28,6 @@ function App() {
     const [listening, setListening] = useState(false);
     const [variantState, setVariant] = useState("primary");
     const [statusImage, setStatusImage] = useState(cold);
-    const [chosenTime, setChosenTime] = useState("00:00:00");
     const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
     const [stopTime, setStopTime] = useState(new Date().getTime() / 1000);
     const onChangeFromTime = (val) => {
