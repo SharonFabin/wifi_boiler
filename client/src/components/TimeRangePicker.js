@@ -33,7 +33,7 @@ const TimeRangePicker = (props) => {
                         value={fromDate}
                         onChange={setFromDate}
                         ampm={false}
-                        views={["hours", "minutes", "seconds"]}
+                        views={["hours", "minutes"]}
                         showTodayButton={true}
                         okLabel="אשר"
                         cancelLabel="בטל"
@@ -46,7 +46,7 @@ const TimeRangePicker = (props) => {
                         value={toDate}
                         onChange={setToDate}
                         ampm={false}
-                        views={["hours", "minutes", "seconds"]}
+                        views={["hours", "minutes"]}
                         showTodayButton={true}
                         okLabel="אשר"
                         cancelLabel="בטל"
