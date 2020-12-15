@@ -14,7 +14,7 @@ import {
     ProgressBar,
 } from "react-bootstrap";
 import DateTimer from "./components/DateTimer.js";
-import { updateBoiler, closeBoiler } from "./services/Api.js";
+import { openBoiler, closeBoiler, scheduleBoiler } from "./services/Api.js";
 import { timeToSeconds } from "./services/TimeConverter.js";
 import config from "./config/index.js";
 import TimeRangePicker from "./components/TimeRangePicker";
@@ -29,10 +29,13 @@ function App() {
     const [variantState, setVariant] = useState("primary");
     const [statusImage, setStatusImage] = useState(cold);
     const [chosenTime, setChosenTime] = useState("00:00:00");
-    const [startTime, setStartTime] = useState(new Date());
-    const [stopTime, setStopTime] = useState(new Date());
-    const onChange = (date, dateString) => {
-        setChosenTime(dateString);
+    const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
+    const [stopTime, setStopTime] = useState(new Date().getTime() / 1000);
+    const onChangeFromTime = (val) => {
+        setStartTime(val.getTime() / 1000);
+    };
+    const onChangeToTime = (val) => {
+        setStopTime(val.getTime() / 1000);
     };
 
     useEffect(() => {
@@ -84,21 +87,21 @@ function App() {
                 <Button
                     type="button"
                     className="btn btn-danger btn-circle btn-lg"
-                    onClick={() => updateBoiler(1800)}
+                    onClick={() => openBoiler(1800)}
                 >
                     30
                 </Button>
                 <Button
                     type="button"
                     className="btn btn-warning btn-circle btn-lg"
-                    onClick={() => updateBoiler(900)}
+                    onClick={() => openBoiler(900)}
                 >
                     15
                 </Button>
                 <Button
                     type="button"
                     className="btn btn-info btn-circle btn-lg"
-                    onClick={() => updateBoiler(300)}
+                    onClick={() => openBoiler(300)}
                 >
                     5
                 </Button>
@@ -106,8 +109,8 @@ function App() {
             <Row className="center spaced">
                 {/* <DatePicker picker="time" onChange={onChange} /> */}
                 <TimeRangePicker
-                    onChangeFrom={setStartTime}
-                    onChangeTo={setStopTime}
+                    onChangeFrom={onChangeFromTime}
+                    onChangeTo={onChangeToTime}
                 />
             </Row>
             <Row className="center spaced">
@@ -121,7 +124,7 @@ function App() {
                 <Button
                     className="button-space"
                     variant="danger"
-                    onClick={() => updateBoiler(timeToSeconds(chosenTime))}
+                    onClick={() => scheduleBoiler(startTime, stopTime)}
                 >
                     לפתוח
                 </Button>

@@ -35,8 +35,8 @@ const TimeRangePicker = (props) => {
     const [fromDate, setFromDate] = useState(new Date());
     const [toDate, setToDate] = useState(new Date());
     const onChangeFrom = (val) => {
-        if (val > toDate) val = toDate;
         setFromDate(val);
+        if (val > toDate) setToDate(val);
         props.onChangeFrom(val);
     };
     const onChangeTo = (val) => {

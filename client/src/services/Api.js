@@ -1,10 +1,22 @@
 import config from "../config/index.js";
 
-const updateBoiler = (time) => {
+const scheduleBoiler = (from, to) => {
     const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ open: true, openDuration: time }),
+        body: JSON.stringify({ openFrom: from, openTo: to }),
+    };
+    fetch(
+        `http://${config.web.ip}:${config.web.server_port}/boiler/schedule`,
+        requestOptions
+    ).then((response) => response.json());
+};
+
+const openBoiler = (time) => {
+    const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ openDuration: time }),
     };
     fetch(
         `http://${config.web.ip}:${config.web.server_port}/boiler/open`,
@@ -24,4 +36,4 @@ const closeBoiler = () => {
     ).then((response) => response.json());
 };
 
-export { updateBoiler, closeBoiler };
+export { openBoiler, closeBoiler, scheduleBoiler };
