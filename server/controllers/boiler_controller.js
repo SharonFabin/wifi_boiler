@@ -1,5 +1,6 @@
-import SwitchService from "../services/switch_service.js";
 import config from "../config/index.js";
+import { db } from "../config/db.js";
+import SwitchService from "../services/switch_service.js";
 const switchService = new SwitchService(config.boiler.pin, 1);
 let clients = [];
 let boiler = {
@@ -9,7 +10,7 @@ let boiler = {
     reservations: [],
 };
 let boilerTimeout;
-let scheduleTimeout;
+let reservatoinTimeouts = {};
 
 function eventsHandler(req, res, next) {
     const headers = {
@@ -40,14 +41,23 @@ async function scheduleBoiler(req, res, next) {
                 "Reservation with this start time has already been submitted.",
         });
     } else {
-        reservation = {
+        const reservation = {
             openFrom: boilerData.openFrom,
             openTo: boilerData.openTo,
-            callback: setTimeout(() => {
-                startBoiler(boilerData.openTo - boilerData.openFrom);
-            }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000),
         };
-        boiler.reservations.push(reservation);
+        db.collection("reservations").insertOne(reservation, function (err, r) {
+            if (err != null) {
+                res.status(500).send({
+                    message: err,
+                });
+                return;
+            }
+
+            reservatoinTimeouts[reservation._id] = setTimeout(() => {
+                startBoiler(boilerData.openTo - boilerData.openFrom);
+            }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000);
+            boiler.reservations.push(reservation);
+        });
         sendEventsToAll(boiler);
         res.sendStatus(200);
     }

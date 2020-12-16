@@ -5,7 +5,7 @@ import {
     openBoiler,
     closeBoiler,
     scheduleBoiler,
-} from "../../controllers/boiler-controller.js";
+} from "../../controllers/boiler_controller.js";
 const router = express.Router();
 export default (app) => {
     app.use("/boiler", router);
