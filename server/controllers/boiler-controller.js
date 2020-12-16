@@ -32,8 +32,6 @@ function eventsHandler(req, res, next) {
     });
 }
 
-// Iterate clients list and use write res object method to send new nest
-
 async function scheduleBoiler(req, res, next) {
     const boilerData = req.body;
     if (boiler.reservations.some((r) => r.openFrom === boilerData.openFrom)) {
@@ -55,7 +53,6 @@ async function scheduleBoiler(req, res, next) {
     }
 }
 
-// Updates boiler data and resets timer
 async function openBoiler(req, res, next) {
     const boilerData = req.body;
     startBoiler(boilerData.openDuration);
