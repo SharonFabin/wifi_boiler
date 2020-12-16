@@ -10,7 +10,7 @@ let boiler = {
     reservations: [],
 };
 let boilerTimeout;
-let reservatoinTimeouts = {};
+let reservationTimeouts = {};
 
 function eventsHandler(req, res, next) {
     const headers = {
@@ -45,7 +45,7 @@ async function scheduleBoiler(req, res, next) {
             openFrom: boilerData.openFrom,
             openTo: boilerData.openTo,
         };
-        db.collection("reservations").insertOne(reservation, function (err, r) {
+        db.collection("reservations").insertOne(reservation, function (err) {
             if (err != null) {
                 res.status(500).send({
                     message: err,
@@ -53,9 +53,18 @@ async function scheduleBoiler(req, res, next) {
                 return;
             }
 
-            reservatoinTimeouts[reservation._id] = setTimeout(() => {
-                startBoiler(boilerData.openTo - boilerData.openFrom);
-            }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000);
+            const timeoutDuration =
+                (boilerData.openFrom - new Date().getTime() / 1000) * 1000;
+            const reservedDuration = reservation.openTo - reservation.openFrom;
+            reservationTimeouts[reservation._id] = setTimeout(
+                (id, duration) => {
+                    delete reservationTimeouts[id];
+                    startBoiler(duration);
+                },
+                timeoutDuration,
+                reservation._id,
+                reservedDuration
+            );
             boiler.reservations.push(reservation);
         });
         sendEventsToAll(boiler);
