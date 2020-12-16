@@ -6,8 +6,7 @@ let boiler = {
     open: false,
     openDuration: 0,
     lastOpened: Date.now(),
-    openFrom: 0,
-    openTo: 0,
+    reservations: [],
 };
 let boilerTimeout;
 let scheduleTimeout;
@@ -37,25 +36,35 @@ function eventsHandler(req, res, next) {
 
 async function scheduleBoiler(req, res, next) {
     const boilerData = req.body;
-    boiler.openTo = boilerData.openTo;
-    boiler.openFrom = boilerData.openFrom;
-    clearTimeout(scheduleTimeout);
-    scheduleTimeout = setTimeout(() => {
-        startBoiler(boilerData.openTo - boilerData.openFrom);
-    }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000);
-    sendEventsToAll(boiler);
+    if (boiler.reservations.some((r) => r.openFrom === boilerData.openFrom)) {
+        res.status(500).send({
+            message:
+                "Reservation with this start time has already been submitted.",
+        });
+    } else {
+        reservation = {
+            openFrom: boilerData.openFrom,
+            openTo: boilerData.openTo,
+            callback: setTimeout(() => {
+                startBoiler(boilerData.openTo - boilerData.openFrom);
+            }, (boilerData.openFrom - new Date().getTime() / 1000) * 1000),
+        };
+        boiler.reservations.push(reservation);
+        sendEventsToAll(boiler);
+        res.sendStatus(200);
+    }
 }
 
 // Updates boiler data and resets timer
 async function openBoiler(req, res, next) {
     const boilerData = req.body;
     startBoiler(boilerData.openDuration);
-    res.json(boiler);
+    res.sendStatus(200);
 }
 
 async function closeBoiler(req, res, next) {
     stopBoiler();
-    res.json(boiler);
+    res.sendStatus(200);
 }
 
 const startBoiler = (duration) => {

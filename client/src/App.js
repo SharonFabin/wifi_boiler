@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import "./App.css";
 import hot from "./resources/hot.gif";
 import cold from "./resources/freeze.gif";
+import reservationIcon from "./resources/reservation_icon.png";
 import React, { useState, useEffect } from "react";
 import { DatePicker } from "antd";
 import {
@@ -12,6 +13,9 @@ import {
     Col,
     Image,
     ProgressBar,
+    Badge,
+    Modal,
+    ListGroup,
 } from "react-bootstrap";
 import DateTimer from "./components/DateTimer.js";
 import { openBoiler, closeBoiler, scheduleBoiler } from "./services/Api.js";
@@ -30,12 +34,15 @@ function App() {
     const [statusImage, setStatusImage] = useState(cold);
     const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
     const [stopTime, setStopTime] = useState(new Date().getTime() / 1000);
+    const [show, setShow] = useState(false);
     const onChangeFromTime = (val) => {
         setStartTime(val.getTime() / 1000);
     };
     const onChangeToTime = (val) => {
         setStopTime(val.getTime() / 1000);
     };
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
     useEffect(() => {
         if (!listening) {
@@ -74,13 +81,24 @@ function App() {
                     variant={variantState}
                 />
             </Row>
-            <Row className="center">
-                <div className="content">
-                    <DateTimer
-                        startTime={boiler.lastOpened}
-                        timerDuration={boiler.openDuration}
-                    />
-                </div>
+            <Row className="center spaced">
+                <Col className="center">
+                    <div className="icon-space"></div>
+                    <div className="date-timer">
+                        <DateTimer
+                            startTime={boiler.lastOpened}
+                            timerDuration={boiler.openDuration}
+                        />
+                    </div>
+                    <div className="icon-space">
+                        <a onClick={handleShow}>
+                            <Badge pill variant="secondary">
+                                9
+                            </Badge>
+                            <span className="sr-only">unread messages</span>
+                        </a>
+                    </div>
+                </Col>
             </Row>
             <Row className="center spaced">
                 <Button
@@ -128,6 +146,28 @@ function App() {
                     לפתוח
                 </Button>
             </Row>
+            <Modal show={show} onHide={handleClose} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal heading</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <ListGroup>
+                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
+                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
+                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
+                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
+                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                    </ListGroup>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </Container>
     );
 }
