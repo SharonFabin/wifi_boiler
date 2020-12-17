@@ -32,14 +32,25 @@ function App() {
     const [listening, setListening] = useState(false);
     const [variantState, setVariant] = useState("primary");
     const [statusImage, setStatusImage] = useState(cold);
-    const [startTime, setStartTime] = useState(new Date().getTime() / 1000);
-    const [stopTime, setStopTime] = useState(new Date().getTime() / 1000);
+    const [date, setDate] = useState(new Date());
+    const [startTime, setStartTime] = useState(new Date());
+    const [stopTime, setStopTime] = useState(new Date());
     const [show, setShow] = useState(false);
+    const onChangeDate = (val) => {
+        setDate(val);
+    };
     const onChangeFromTime = (val) => {
-        setStartTime(val.getTime() / 1000);
+        setStartTime(val);
     };
     const onChangeToTime = (val) => {
-        setStopTime(val.getTime() / 1000);
+        setStopTime(val);
+    };
+    const requestBoilerChange = () => {
+        let startDate = new Date(date.getTime());
+        let stopDate = new Date(date.getTime());
+        startDate.setHours(startTime.getHours(), startTime.getMinutes());
+        stopDate.setHours(stopTime.getHours(), stopTime.getMinutes());
+        scheduleBoiler(startDate.getTime(), stopDate.getTime());
     };
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -57,6 +68,7 @@ function App() {
                             open: false,
                             openDuration: 0,
                             lastOpened: 0,
+                            reservations: [],
                         })
                 );
                 setBoiler((boiler) => (boiler = parsedData));
@@ -126,6 +138,7 @@ function App() {
             <Row className="center spaced">
                 {/* <DatePicker picker="time" onChange={onChange} /> */}
                 <TimeRangePicker
+                    onChangeDate={onChangeDate}
                     onChangeFrom={onChangeFromTime}
                     onChangeTo={onChangeToTime}
                 />
@@ -141,7 +154,7 @@ function App() {
                 <Button
                     className="button-space"
                     variant="danger"
-                    onClick={() => scheduleBoiler(startTime, stopTime)}
+                    onClick={requestBoilerChange}
                 >
                     לפתוח
                 </Button>

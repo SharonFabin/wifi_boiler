@@ -7,7 +7,7 @@ let boiler = {
     open: false,
     openDuration: 0,
     lastOpened: Date.now(),
-    reservations: [],
+    reservations: {},
 };
 let boilerTimeout;
 let reservationTimeouts = {};
@@ -35,7 +35,11 @@ function eventsHandler(req, res, next) {
 
 async function scheduleBoiler(req, res, next) {
     const boilerData = req.body;
-    if (boiler.reservations.some((r) => r.openFrom === boilerData.openFrom)) {
+    if (
+        Object.values(boiler.reservations).some(
+            (r) => r.openFrom === boilerData.openFrom
+        )
+    ) {
         res.status(500).send({
             message:
                 "Reservation with this start time has already been submitted.",
@@ -45,7 +49,7 @@ async function scheduleBoiler(req, res, next) {
             openFrom: boilerData.openFrom,
             openTo: boilerData.openTo,
         };
-        db.collection("reservations").insertOne(reservation, function (err) {
+        db.collection("reservations").insertOne(reservation, (err) => {
             if (err != null) {
                 res.status(500).send({
                     message: err,
@@ -53,19 +57,23 @@ async function scheduleBoiler(req, res, next) {
                 return;
             }
 
-            const timeoutDuration =
-                (boilerData.openFrom - new Date().getTime() / 1000) * 1000;
-            const reservedDuration = reservation.openTo - reservation.openFrom;
+            const timeoutDuration = boilerData.openFrom - new Date().getTime();
+            const reservedDuration =
+                (reservation.openTo - reservation.openFrom) / 1000;
+            boiler.reservations[reservation._id] = {
+                openFrom: reservation.openFrom,
+                openTo: reservation.openTo,
+            };
             reservationTimeouts[reservation._id] = setTimeout(
                 (id, duration) => {
                     delete reservationTimeouts[id];
+                    delete boiler.reservations[id];
                     startBoiler(duration);
                 },
                 timeoutDuration,
                 reservation._id,
                 reservedDuration
             );
-            boiler.reservations.push(reservation);
         });
         sendEventsToAll(boiler);
         res.sendStatus(200);
