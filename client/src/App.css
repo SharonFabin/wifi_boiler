@@ -124,3 +124,8 @@ body {
 .icon-space {
     width: 30px;
 }
+.modal-list {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

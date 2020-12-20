@@ -12,6 +12,18 @@ const scheduleBoiler = (from, to) => {
     ).then((response) => response.json());
 };
 
+const deleteReservation = (id) => {
+    const requestOptions = {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ _id: id }),
+    };
+    fetch(
+        `http://${config.web.ip}:${config.web.server_port}/boiler/delete`,
+        requestOptions
+    ).then((response) => response.json());
+};
+
 const openBoiler = (time) => {
     const requestOptions = {
         method: "POST",
@@ -36,4 +48,4 @@ const closeBoiler = () => {
     ).then((response) => response.json());
 };
 
-export { openBoiler, closeBoiler, scheduleBoiler };
+export { openBoiler, closeBoiler, scheduleBoiler, deleteReservation };

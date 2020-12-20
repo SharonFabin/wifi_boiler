@@ -74,10 +74,28 @@ async function scheduleBoiler(req, res, next) {
                 reservation._id,
                 reservedDuration
             );
+            sendEventsToAll(boiler);
+            res.sendStatus(200);
         });
-        sendEventsToAll(boiler);
-        res.sendStatus(200);
     }
+}
+
+async function deleteReservation(req, res, next) {
+    const data = req.body;
+    const query = { _id: data._id };
+    await db.collection("reservations").deleteOne(query, (err) => {
+        if (err != null) {
+            res.status(500).send({
+                message: err,
+            });
+            return;
+        }
+        clearTimeout(reservationTimeouts[data._id]);
+        delete reservationTimeouts[data._id];
+        delete boiler.reservations[data._id];
+    });
+    sendEventsToAll(boiler);
+    res.sendStatus(200);
 }
 
 async function openBoiler(req, res, next) {
@@ -120,4 +138,11 @@ function status(req, res, next) {
     return res.json({ clients: clients.length });
 }
 
-export { eventsHandler, status, openBoiler, closeBoiler, scheduleBoiler };
+export {
+    eventsHandler,
+    status,
+    openBoiler,
+    closeBoiler,
+    scheduleBoiler,
+    deleteReservation,
+};

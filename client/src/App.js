@@ -18,7 +18,12 @@ import {
     ListGroup,
 } from "react-bootstrap";
 import DateTimer from "./components/DateTimer.js";
-import { openBoiler, closeBoiler, scheduleBoiler } from "./services/Api.js";
+import {
+    openBoiler,
+    closeBoiler,
+    scheduleBoiler,
+    deleteReservation,
+} from "./services/Api.js";
 import { timeToSeconds } from "./services/TimeConverter.js";
 import config from "./config/index.js";
 import TimeRangePicker from "./components/TimeRangePicker";
@@ -28,6 +33,7 @@ function App() {
         open: false,
         openDuration: 0,
         lastOpened: 0,
+        reservations: {},
     });
     const [listening, setListening] = useState(false);
     const [variantState, setVariant] = useState("primary");
@@ -46,6 +52,7 @@ function App() {
         setStopTime(val);
     };
     const requestBoilerChange = () => {
+        if (startTime.getTime() === stopTime.getTime()) return;
         let startDate = new Date(date.getTime());
         let stopDate = new Date(date.getTime());
         startDate.setHours(startTime.getHours(), startTime.getMinutes());
@@ -62,20 +69,10 @@ function App() {
             );
             events.onmessage = (event) => {
                 const parsedData = JSON.parse(event.data);
-                setBoiler(
-                    (boiler) =>
-                        (boiler = {
-                            open: false,
-                            openDuration: 0,
-                            lastOpened: 0,
-                            reservations: [],
-                        })
-                );
-                setBoiler((boiler) => (boiler = parsedData));
+                setBoiler(parsedData);
                 setVariant(parsedData.open ? "danger" : "primary");
                 setStatusImage(parsedData.open ? hot : cold);
             };
-
             setListening(true);
         }
     }, [listening, boiler]);
@@ -105,7 +102,7 @@ function App() {
                     <div className="icon-space">
                         <a onClick={handleShow}>
                             <Badge pill variant="secondary">
-                                9
+                                {Object.keys(boiler.reservations).length}
                             </Badge>
                             <span className="sr-only">unread messages</span>
                         </a>
@@ -161,7 +158,7 @@ function App() {
             </Row>
             <Modal show={show} onHide={handleClose} centered className="modal">
                 <Modal.Header closeButton>
-                    <Modal.Title>Modal heading</Modal.Title>
+                    <Modal.Title>Reservations</Modal.Title>
                 </Modal.Header>
                 <Modal.Body
                     style={{
@@ -170,36 +167,25 @@ function App() {
                     }}
                 >
                     <ListGroup>
-                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
-                        <ListGroup.Item>Cras justo odio</ListGroup.Item>
-                        <ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-                        <ListGroup.Item>Morbi leo risus</ListGroup.Item>
-                        <ListGroup.Item>Porta ac consectetur ac</ListGroup.Item>
-                        <ListGroup.Item>Vestibulum at eros</ListGroup.Item>
+                        {Object.keys(boiler.reservations).map((id) => (
+                            <ListGroup.Item key={id} className="modal-list">
+                                {new Date(
+                                    boiler.reservations[id].openFrom
+                                ).toLocaleString()}{" "}
+                                →
+                                {new Date(
+                                    boiler.reservations[id].openTo
+                                ).toLocaleTimeString()}
+                                <Button
+                                    variant="outline-danger"
+                                    onClick={deleteReservation(id)}
+                                >
+                                    X
+                                </Button>
+                            </ListGroup.Item>
+                        ))}
                     </ListGroup>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
             </Modal>
         </Container>
     );
