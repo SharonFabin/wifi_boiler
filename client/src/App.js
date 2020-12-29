@@ -178,7 +178,7 @@ function App() {
                                 ).toLocaleTimeString()}
                                 <Button
                                     variant="outline-danger"
-                                    onClick={deleteReservation(id)}
+                                    onClick={() => deleteReservation(id)}
                                 >
                                     X
                                 </Button>
